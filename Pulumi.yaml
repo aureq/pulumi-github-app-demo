@@ -1,0 +1,3 @@
+name: pulumi-github-app-demo
+description: A Pulumi program to demonstrate the Pulumi GitHub app
+runtime: nodejs
