@@ -252,10 +252,4 @@ export class Vpc extends ComponentResource {
 
         return [pulumi.output(securityGroups), securityGroupIds];
     }
-
-    public publicSubnetIds(): pulumi.Output<pulumi.Output<string>[]> {
-        return pulumi.all([this.publicSubnets]).apply(([_publicSubnets]) => {
-            return _publicSubnets.map(x => x.id);
-        });
-    }
 };
