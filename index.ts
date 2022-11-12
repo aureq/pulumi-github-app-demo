@@ -14,6 +14,31 @@ export = async () => {
         subnetMask: "255.255.240.0",
         enableDnsHostnames: true,
         enableDnsSupport: true,
-    })
-    return {}
+    });
+
+    const sshSg = new aws.ec2.SecurityGroup("aws-sg-allowSsh", {
+        vpcId: vpc.vpc.id,
+        description: "Allow SSH inbound traffic",
+        tags: {
+            'Name': "aws-sg-allowSsh",
+        },
+        ingress: [{
+            cidrBlocks: ['0.0.0.0/0'],
+            fromPort: 22,
+            toPort: 22,
+            protocol: 'tcp',
+            description: 'SSH to VPC'
+        }],
+        egress: [{
+            cidrBlocks: ['0.0.0.0/0'],
+            fromPort: 0,
+            toPort: 0,
+            protocol: '-1'
+        }],
+    }, {
+        parent: vpc
+    });
+    return {
+
+    }
 }
