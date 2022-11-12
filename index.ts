@@ -7,7 +7,7 @@ const awsConfig = new pulumi.Config("aws");
 export = async () => {
 
     const vpc = new acmeVpc.Vpc("vpc", {
-        availabilityZones: ["ap-soueast-2a", "ap-southeast-2b"],
+        availabilityZones: ["ap-southeast-2a", "ap-southeast-2b"],
         cidrBlock: "10.42.0.0/16",
         ownerEmail: "aureqw@pulumi.com",
         region: awsConfig.require("region"),
