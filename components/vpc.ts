@@ -10,7 +10,6 @@ interface VpcArgs {
     instanceTenancy?: Input<string>,
     enableDnsHostnames?: Input<boolean>,
     enableDnsSupport?: Input<boolean>,
-    monthlyBudget?: Input<string>,
     availabilityZones: string[],
     region: string,
 };
@@ -50,7 +49,6 @@ export class Vpc extends ComponentResource {
         this.args = args;
         this.vpcCidr = new Netmask(this.args.cidrBlock.toString());
         this.subnetCidr = new Netmask(this.vpcCidr.base+'/'+this.args.subnetMask);
-        // this.createBudget();
         this.vpc = this.createVpc();
         this.dnsServer = this.getDnsServer();
         this.igw = this.createIgw();
@@ -82,32 +80,6 @@ export class Vpc extends ComponentResource {
 
         [this.securityGroups, this.securityGroupIds] = this.createSecurityGroups();
     }
-
-    /**
-     * Create an AWS budget in order to track our spending on this deployment
-     */
-
-    private createBudget() {
-        let accountId = aws.getCallerIdentity();
-
-        new aws.budgets.Budget(this.name, {
-            accountId: accountId.then(it => it.accountId),
-            budgetType: "COST",
-            costFilters: [],
-            limitAmount: this.args.monthlyBudget || "500.0",
-            limitUnit: "USD",
-            timePeriodStart: "2010-01-01_00:00",
-            timeUnit: "MONTHLY",
-            notifications: [{
-                comparisonOperator: "GREATER_THAN",
-                notificationType: "FORECASTED",
-                subscriberEmailAddresses: [this.args.ownerEmail],
-                threshold: 80,
-                thresholdType: "PERCENTAGE",
-            }],
-        }, { parent: this });
-    }
-
     /**
      * The Vpc class derives from the ComponentResource class and is used to create the necessary Vpc resources for the project. It uses the VpcArgs to get the necessary configuration parameters.
      *
