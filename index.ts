@@ -1,9 +1,19 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/awsx";
+import * as acmeVpc from "./components/vpc";
 
-// Create an AWS resource (S3 Bucket)
-const bucket = new aws.s3.Bucket("my-bucket");
+const awsConfig = new pulumi.Config("aws");
 
-// Export the name of the bucket
-export const bucketName = bucket.id;
+export = async () => {
+
+    const vpc = new acmeVpc.Vpc("vpc", {
+        availabilityZones: ["ap-soueast-2a", "ap-southeast-2b"],
+        cidrBlock: "10.42.0.0/16",
+        ownerEmail: "aureqw@pulumi.com",
+        region: awsConfig.require("region"),
+        subnetMask: "255.255.240.0",
+        enableDnsHostnames: true,
+        enableDnsSupport: true,
+    })
+    return {}
+}
