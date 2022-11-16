@@ -9,14 +9,14 @@ export = async () => {
     const vpc = new acmeVpc.Vpc("vpc", {
         availabilityZones: ["ap-southeast-2a", "ap-southeast-2b"],
         cidrBlock: "10.42.0.0/16",
-        ownerEmail: "aureq-test@pulumi.com",         // change me
+        ownerEmail: "aureq@pulumi.com",         // change me
         region: awsConfig.require("region"),
         subnetMask: "255.255.240.0",
         enableDnsHostnames: true,
         enableDnsSupport: true,
     });
 
-    const sshSg = new aws.ec2.SecurityGroup("aws-sg-allowSsh", {
+    const sshSg = new aws.ec2.SecurityGroup("aws-sg-allowSsh-2", {
         vpcId: vpc.vpc.id,
         description: "Allow SSH inbound traffic",
         tags: {
